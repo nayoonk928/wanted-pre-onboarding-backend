@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class JobPostingDto {
+public class PostAddDto {
 
   private Long companyId;
   private String position;

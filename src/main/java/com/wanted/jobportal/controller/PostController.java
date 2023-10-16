@@ -1,8 +1,8 @@
 package com.wanted.jobportal.controller;
 
-import com.wanted.jobportal.dto.JobPostingDto;
-import com.wanted.jobportal.dto.JobPostingUpdateDto;
-import com.wanted.jobportal.service.JobPostingService;
+import com.wanted.jobportal.dto.PostAddDto;
+import com.wanted.jobportal.dto.PostUpdateDto;
+import com.wanted.jobportal.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,23 +16,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/job")
-public class JobPostingController {
+public class PostController {
 
-  private final JobPostingService jobPostingService;
+  private final PostService postService;
 
   @PostMapping("/post")
-  public ResponseEntity<String> createJobPosting(@RequestBody JobPostingDto dto) {
-    return jobPostingService.createJobPosting(dto);
+  public ResponseEntity<String> createJobPosting(@RequestBody PostAddDto dto) {
+    return postService.createJobPosting(dto);
   }
 
   @PatchMapping("/post")
-  public ResponseEntity<String> modifyJobPosting(@RequestBody JobPostingUpdateDto dto) {
-    return jobPostingService.updateJobPosting(dto);
+  public ResponseEntity<String> modifyJobPosting(@RequestBody PostUpdateDto dto) {
+    return postService.updateJobPosting(dto);
   }
 
   @DeleteMapping("/post/{id}")
   public ResponseEntity<String> deleteJobPosting(@PathVariable Long id) {
-    return jobPostingService.deleteJobPosting(id);
+    return postService.deleteJobPosting(id);
   }
 
 }

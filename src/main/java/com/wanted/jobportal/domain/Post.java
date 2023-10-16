@@ -14,13 +14,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "jobPosting")
+@Entity(name = "post")
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JobPosting {
+public class Post {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

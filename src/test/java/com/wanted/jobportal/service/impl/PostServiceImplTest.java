@@ -12,32 +12,32 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.wanted.jobportal.domain.Company;
-import com.wanted.jobportal.domain.JobPosting;
-import com.wanted.jobportal.dto.JobPostingDto;
-import com.wanted.jobportal.dto.JobPostingUpdateDto;
+import com.wanted.jobportal.domain.Post;
+import com.wanted.jobportal.dto.PostAddDto;
+import com.wanted.jobportal.dto.PostUpdateDto;
 import com.wanted.jobportal.exception.CustomException;
 import com.wanted.jobportal.repository.CompanyRepository;
-import com.wanted.jobportal.repository.JobPostingRepository;
-import com.wanted.jobportal.service.JobPostingService;
+import com.wanted.jobportal.repository.PostRepository;
+import com.wanted.jobportal.service.PostService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 
-class JobPostingServiceImplTest {
+class PostServiceImplTest {
 
-  private JobPostingService jobPostingService;
+  private PostService postService;
 
   private CompanyRepository companyRepository;
 
-  private JobPostingRepository jobPostingRepository;
+  private PostRepository postRepository;
 
   @BeforeEach
   void setUp() {
     companyRepository = mock(CompanyRepository.class);
-    jobPostingRepository = mock(JobPostingRepository.class);
-    jobPostingService = new JobPostingServiceImpl(companyRepository, jobPostingRepository);
+    postRepository = mock(PostRepository.class);
+    postService = new PostServiceImpl(companyRepository, postRepository);
   }
 
   @Test
@@ -50,7 +50,7 @@ class JobPostingServiceImplTest {
         .region("서울")
         .build();
 
-    JobPostingDto jobPostingDto = JobPostingDto.builder()
+    PostAddDto postAddDto = PostAddDto.builder()
         .companyId(1L)
         .position("백엔드 주니어 개발자")
         .reward(1500000)
@@ -60,11 +60,11 @@ class JobPostingServiceImplTest {
 
     //when
     when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
-    ResponseEntity<String> response = jobPostingService.createJobPosting(jobPostingDto);
+    ResponseEntity<String> response = postService.createJobPosting(postAddDto);
 
     //then
     verify(companyRepository, times(1)).findById(1L);
-    verify(jobPostingRepository, times(1)).save(any());
+    verify(postRepository, times(1)).save(any());
     assertEquals(response.getBody(), "채용공고가 등록되었습니다.");
   }
 
@@ -72,7 +72,7 @@ class JobPostingServiceImplTest {
   @DisplayName("채용공고 등록 - 실패")
   void createJobPosting_CompanyNotFound() {
     //given
-    JobPostingDto jobPostingDto = JobPostingDto.builder()
+    PostAddDto postAddDto = PostAddDto.builder()
         .companyId(2L)
         .position("백엔드 주니어 개발자")
         .reward(1500000)
@@ -85,7 +85,7 @@ class JobPostingServiceImplTest {
 
     //then
     CustomException exception = assertThrows(CustomException.class,
-        () -> jobPostingService.createJobPosting(jobPostingDto));
+        () -> postService.createJobPosting(postAddDto));
     assertEquals(COMPANY_NOT_FOUND, exception.getErrorCode());
   }
 
@@ -93,7 +93,7 @@ class JobPostingServiceImplTest {
   @DisplayName("채용공고 수정 - 성공")
   void updateJobPosting_Success() {
     //given
-    JobPostingUpdateDto updateDto = JobPostingUpdateDto.builder()
+    PostUpdateDto updateDto = PostUpdateDto.builder()
         .jobPostingId(1L)
         .position("업데이트된 포지션")
         .reward(2000000)
@@ -101,7 +101,7 @@ class JobPostingServiceImplTest {
         .skill("Java")
         .build();
 
-    JobPosting existingJobPosting = JobPosting.builder()
+    Post existingPost = Post.builder()
         .id(1L)
         .position("기존 포지션")
         .reward(1000000)
@@ -110,24 +110,24 @@ class JobPostingServiceImplTest {
         .build();
 
     //when
-    when(jobPostingRepository.findById(1L)).thenReturn(java.util.Optional.of(existingJobPosting));
-    ResponseEntity<String> response = jobPostingService.updateJobPosting(updateDto);
+    when(postRepository.findById(1L)).thenReturn(java.util.Optional.of(existingPost));
+    ResponseEntity<String> response = postService.updateJobPosting(updateDto);
 
     //then
-    verify(jobPostingRepository, times(1)).findById(1L);
-    verify(jobPostingRepository, times(1)).save(any());
+    verify(postRepository, times(1)).findById(1L);
+    verify(postRepository, times(1)).save(any());
     assertEquals("채용공고가 수정되었습니다.", response.getBody());
-    assertEquals("업데이트된 포지션", existingJobPosting.getPosition());
-    assertEquals(2000000, existingJobPosting.getReward());
-    assertEquals("업데이트된 설명", existingJobPosting.getDescription());
-    assertEquals("Java", existingJobPosting.getSkill());
+    assertEquals("업데이트된 포지션", existingPost.getPosition());
+    assertEquals(2000000, existingPost.getReward());
+    assertEquals("업데이트된 설명", existingPost.getDescription());
+    assertEquals("Java", existingPost.getSkill());
   }
 
   @Test
   @DisplayName("채용공고 수정 - 실패")
   void updateJobPosting_PostingNotFound() {
     //given
-    JobPostingUpdateDto updateDto = JobPostingUpdateDto.builder()
+    PostUpdateDto updateDto = PostUpdateDto.builder()
         .jobPostingId(1L)
         .position("업데이트된 포지션")
         .reward(2000000)
@@ -136,11 +136,11 @@ class JobPostingServiceImplTest {
         .build();
 
     //when
-    when(jobPostingRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+    when(postRepository.findById(1L)).thenReturn(java.util.Optional.empty());
 
     //then
     CustomException exception = assertThrows(CustomException.class,
-        () -> jobPostingService.updateJobPosting(updateDto));
+        () -> postService.updateJobPosting(updateDto));
     assertEquals(JOB_POSTING_NOT_FOUND, exception.getErrorCode());
   }
 
@@ -148,7 +148,7 @@ class JobPostingServiceImplTest {
   @DisplayName("채용공고 수정 - 실패")
   void updateJobPosting_FailWithModifiedJobPostingId() {
     //given
-    JobPostingUpdateDto updateDto = JobPostingUpdateDto.builder()
+    PostUpdateDto updateDto = PostUpdateDto.builder()
         .jobPostingId(1L)
         .position("업데이트된 포지션")
         .reward(2000000)
@@ -156,7 +156,7 @@ class JobPostingServiceImplTest {
         .skill("Java")
         .build();
 
-    JobPosting existingJobPosting = JobPosting.builder()
+    Post existingPost = Post.builder()
         .id(2L)
         .position("기존 포지션")
         .reward(1000000)
@@ -166,11 +166,11 @@ class JobPostingServiceImplTest {
 
 
     //when
-    when(jobPostingRepository.findById(1L)).thenReturn(java.util.Optional.of(existingJobPosting));
+    when(postRepository.findById(1L)).thenReturn(java.util.Optional.of(existingPost));
 
     //then
     CustomException exception = assertThrows(CustomException.class,
-        () -> jobPostingService.updateJobPosting(updateDto));
+        () -> postService.updateJobPosting(updateDto));
     assertEquals(INVALID_JOB_POSTING_ID, exception.getErrorCode());
   }
 
@@ -181,12 +181,12 @@ class JobPostingServiceImplTest {
     Long jobPostingId = 1L;
 
     //when
-    when(jobPostingRepository.existsById(jobPostingId)).thenReturn(true);
-    ResponseEntity<String> response = jobPostingService.deleteJobPosting(jobPostingId);
+    when(postRepository.existsById(jobPostingId)).thenReturn(true);
+    ResponseEntity<String> response = postService.deleteJobPosting(jobPostingId);
 
     //then
-    verify(jobPostingRepository, times(1)).existsById(jobPostingId);
-    verify(jobPostingRepository, times(1)).deleteById(jobPostingId);
+    verify(postRepository, times(1)).existsById(jobPostingId);
+    verify(postRepository, times(1)).deleteById(jobPostingId);
     assertEquals("채용공고가 삭제되었습니다.", response.getBody());
   }
 
@@ -197,11 +197,11 @@ class JobPostingServiceImplTest {
     Long jobPostingId = 1L;
 
     //when
-    when(jobPostingRepository.existsById(jobPostingId)).thenReturn(false);
+    when(postRepository.existsById(jobPostingId)).thenReturn(false);
 
     //then
     CustomException exception = assertThrows(CustomException.class,
-        () -> jobPostingService.deleteJobPosting(jobPostingId));
+        () -> postService.deleteJobPosting(jobPostingId));
     assertEquals(JOB_POSTING_NOT_FOUND, exception.getErrorCode());
   }
 
