@@ -60,12 +60,12 @@ class PostServiceImplTest {
 
     //when
     when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
-    ResponseEntity<String> response = postService.createJobPosting(postAddDto);
+    String response = postService.createJobPosting(postAddDto);
 
     //then
     verify(companyRepository, times(1)).findById(1L);
     verify(postRepository, times(1)).save(any());
-    assertEquals(response.getBody(), "채용공고가 등록되었습니다.");
+    assertEquals(response, "채용공고가 등록되었습니다.");
   }
 
   @Test
@@ -111,12 +111,12 @@ class PostServiceImplTest {
 
     //when
     when(postRepository.findById(1L)).thenReturn(java.util.Optional.of(existingPost));
-    ResponseEntity<String> response = postService.updateJobPosting(updateDto);
+    String response = postService.updateJobPosting(updateDto);
 
     //then
     verify(postRepository, times(1)).findById(1L);
     verify(postRepository, times(1)).save(any());
-    assertEquals("채용공고가 수정되었습니다.", response.getBody());
+    assertEquals("채용공고가 수정되었습니다.", response);
     assertEquals("업데이트된 포지션", existingPost.getPosition());
     assertEquals(2000000, existingPost.getReward());
     assertEquals("업데이트된 설명", existingPost.getDescription());
@@ -182,12 +182,12 @@ class PostServiceImplTest {
 
     //when
     when(postRepository.existsById(jobPostingId)).thenReturn(true);
-    ResponseEntity<String> response = postService.deleteJobPosting(jobPostingId);
+    String response = postService.deleteJobPosting(jobPostingId);
 
     //then
     verify(postRepository, times(1)).existsById(jobPostingId);
     verify(postRepository, times(1)).deleteById(jobPostingId);
-    assertEquals("채용공고가 삭제되었습니다.", response.getBody());
+    assertEquals("채용공고가 삭제되었습니다.", response);
   }
 
   @Test

@@ -1,11 +1,14 @@
 package com.wanted.jobportal.controller;
 
 import com.wanted.jobportal.dto.PostAddDto;
+import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
 import com.wanted.jobportal.service.PostService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,24 +18,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/job")
+@RequestMapping("/api/post")
 public class PostController {
 
   private final PostService postService;
 
-  @PostMapping("/post")
+  @PostMapping
   public ResponseEntity<String> createJobPosting(@RequestBody PostAddDto dto) {
-    return postService.createJobPosting(dto);
+    return ResponseEntity.ok().body(postService.createJobPosting(dto));
   }
 
-  @PatchMapping("/post")
+  @PatchMapping
   public ResponseEntity<String> modifyJobPosting(@RequestBody PostUpdateDto dto) {
-    return postService.updateJobPosting(dto);
+    return ResponseEntity.ok().body(postService.updateJobPosting(dto));
   }
 
-  @DeleteMapping("/post/{id}")
+  @DeleteMapping
   public ResponseEntity<String> deleteJobPosting(@PathVariable Long id) {
-    return postService.deleteJobPosting(id);
+    return ResponseEntity.ok().body(postService.deleteJobPosting(id));
+  }
+
+  @GetMapping
+  public ResponseEntity<List<PostListDto>> getAllPosts() {
+    return ResponseEntity.ok().body(postService.getAllPosts());
   }
 
 }

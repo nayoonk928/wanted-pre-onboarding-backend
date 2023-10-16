@@ -1,13 +1,15 @@
 package com.wanted.jobportal.service;
 
 import com.wanted.jobportal.dto.PostAddDto;
+import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
-import org.springframework.http.ResponseEntity;
+import java.util.List;
 
 public interface PostService {
 
-  ResponseEntity<String> createJobPosting(PostAddDto postAddDto);
-  ResponseEntity<String> updateJobPosting(PostUpdateDto postUpdateDto);
-  ResponseEntity<String> deleteJobPosting(Long id);
+  String createJobPosting(PostAddDto postAddDto);
+  String updateJobPosting(PostUpdateDto postUpdateDto);
+  String deleteJobPosting(Long id);
+  List<PostListDto> getAllPosts();
 
 }

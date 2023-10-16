@@ -7,13 +7,14 @@ import static com.wanted.jobportal.exception.ErrorCode.JOB_POSTING_NOT_FOUND;
 import com.wanted.jobportal.domain.Company;
 import com.wanted.jobportal.domain.Post;
 import com.wanted.jobportal.dto.PostAddDto;
+import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
 import com.wanted.jobportal.exception.CustomException;
 import com.wanted.jobportal.repository.CompanyRepository;
 import com.wanted.jobportal.repository.PostRepository;
 import com.wanted.jobportal.service.PostService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public ResponseEntity<String> createJobPosting(PostAddDto postAddDto) {
+  public String createJobPosting(PostAddDto postAddDto) {
     Company company = companyRepository.findById(postAddDto.getCompanyId())
         .orElseThrow(() -> new CustomException(COMPANY_NOT_FOUND));
 
@@ -39,12 +40,12 @@ public class PostServiceImpl implements PostService {
         .build();
 
     postRepository.save(post);
-    return ResponseEntity.ok().body("채용공고가 등록되었습니다.");
+    return "채용공고가 등록되었습니다.";
   }
 
   @Override
   @Transactional
-  public ResponseEntity<String> updateJobPosting(PostUpdateDto postUpdateDto) {
+  public String updateJobPosting(PostUpdateDto postUpdateDto) {
     Post post = postRepository.findById(postUpdateDto.getJobPostingId())
         .orElseThrow(() -> new CustomException(JOB_POSTING_NOT_FOUND));
 
@@ -69,18 +70,25 @@ public class PostServiceImpl implements PostService {
     }
 
     postRepository.save(post);
-    return ResponseEntity.ok().body("채용공고가 수정되었습니다.");
+    return "채용공고가 수정되었습니다.";
   }
 
   @Override
   @Transactional
-  public ResponseEntity<String> deleteJobPosting(Long id) {
+  public String deleteJobPosting(Long id) {
     if (postRepository.existsById(id)) {
       postRepository.deleteById(id);
-      return ResponseEntity.ok().body("채용공고가 삭제되었습니다.");
+      return "채용공고가 삭제되었습니다.";
     } else {
       throw new CustomException(JOB_POSTING_NOT_FOUND);
     }
+  }
+
+  @Override
+  public List<PostListDto> getAllPosts() {
+    List<Post> posts = postRepository.findAll();
+    List<PostListDto> postListDtos = posts.stream().map(PostListDto::search).toList();
+    return postListDtos;
   }
 
 }
