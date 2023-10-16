@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jobportal?serverTimezone=UTC&characterEncoding=UTF-8
+    username: jobportal
+    password: jobportal
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+
+    properties:
+      format_sql: true
+      hibernate:
+        show-sql: true
