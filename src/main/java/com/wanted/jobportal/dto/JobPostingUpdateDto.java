@@ -1,5 +1,6 @@
 package com.wanted.jobportal.dto;
 
+import com.wanted.jobportal.domain.JobPosting;
 import lombok.Builder;
 import lombok.Getter;
 

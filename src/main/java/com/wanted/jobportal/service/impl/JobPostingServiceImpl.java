@@ -15,6 +15,7 @@ import com.wanted.jobportal.service.JobPostingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +25,7 @@ public class JobPostingServiceImpl implements JobPostingService {
   private final JobPostingRepository jobPostingRepository;
 
   @Override
+  @Transactional
   public ResponseEntity<String> createJobPosting(JobPostingDto jobPostingDto) {
     Company company = companyRepository.findById(jobPostingDto.getCompanyId())
         .orElseThrow(() -> new CustomException(COMPANY_NOT_FOUND));
@@ -41,6 +43,7 @@ public class JobPostingServiceImpl implements JobPostingService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<String> updateJobPosting(JobPostingUpdateDto jobPostingUpdateDto) {
     JobPosting jobPosting = jobPostingRepository.findById(jobPostingUpdateDto.getJobPostingId())
         .orElseThrow(() -> new CustomException(JOB_POSTING_NOT_FOUND));
@@ -70,6 +73,7 @@ public class JobPostingServiceImpl implements JobPostingService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<String> deleteJobPosting(Long id) {
     if (jobPostingRepository.existsById(id)) {
       jobPostingRepository.deleteById(id);
