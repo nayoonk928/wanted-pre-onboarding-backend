@@ -2,7 +2,9 @@ package com.wanted.jobportal.service.impl;
 
 import static com.wanted.jobportal.exception.ErrorCode.COMPANY_NOT_FOUND;
 import static com.wanted.jobportal.exception.ErrorCode.INVALID_JOB_POSTING_ID;
+import static com.wanted.jobportal.exception.ErrorCode.INVALID_POST_ID;
 import static com.wanted.jobportal.exception.ErrorCode.JOB_POSTING_NOT_FOUND;
+import static com.wanted.jobportal.exception.ErrorCode.POST_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,11 +16,13 @@ import static org.mockito.Mockito.when;
 import com.wanted.jobportal.domain.Company;
 import com.wanted.jobportal.domain.Post;
 import com.wanted.jobportal.dto.PostAddDto;
+import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
 import com.wanted.jobportal.exception.CustomException;
 import com.wanted.jobportal.repository.CompanyRepository;
 import com.wanted.jobportal.repository.PostRepository;
 import com.wanted.jobportal.service.PostService;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +36,7 @@ class PostServiceImplTest {
   private CompanyRepository companyRepository;
 
   private PostRepository postRepository;
+
 
   @BeforeEach
   void setUp() {
@@ -94,7 +99,7 @@ class PostServiceImplTest {
   void updateJobPosting_Success() {
     //given
     PostUpdateDto updateDto = PostUpdateDto.builder()
-        .jobPostingId(1L)
+        .postId(1L)
         .position("업데이트된 포지션")
         .reward(2000000)
         .description("업데이트된 설명")
@@ -128,7 +133,7 @@ class PostServiceImplTest {
   void updateJobPosting_PostingNotFound() {
     //given
     PostUpdateDto updateDto = PostUpdateDto.builder()
-        .jobPostingId(1L)
+        .postId(1L)
         .position("업데이트된 포지션")
         .reward(2000000)
         .description("업데이트된 설명")
@@ -141,7 +146,7 @@ class PostServiceImplTest {
     //then
     CustomException exception = assertThrows(CustomException.class,
         () -> postService.updateJobPosting(updateDto));
-    assertEquals(JOB_POSTING_NOT_FOUND, exception.getErrorCode());
+    assertEquals(POST_NOT_FOUND, exception.getErrorCode());
   }
 
   @Test
@@ -149,7 +154,7 @@ class PostServiceImplTest {
   void updateJobPosting_FailWithModifiedJobPostingId() {
     //given
     PostUpdateDto updateDto = PostUpdateDto.builder()
-        .jobPostingId(1L)
+        .postId(1L)
         .position("업데이트된 포지션")
         .reward(2000000)
         .description("업데이트된 설명")
@@ -164,14 +169,13 @@ class PostServiceImplTest {
         .skill("Python")
         .build();
 
-
     //when
     when(postRepository.findById(1L)).thenReturn(java.util.Optional.of(existingPost));
 
     //then
     CustomException exception = assertThrows(CustomException.class,
         () -> postService.updateJobPosting(updateDto));
-    assertEquals(INVALID_JOB_POSTING_ID, exception.getErrorCode());
+    assertEquals(INVALID_POST_ID, exception.getErrorCode());
   }
 
   @Test
@@ -202,7 +206,20 @@ class PostServiceImplTest {
     //then
     CustomException exception = assertThrows(CustomException.class,
         () -> postService.deleteJobPosting(jobPostingId));
-    assertEquals(JOB_POSTING_NOT_FOUND, exception.getErrorCode());
+    assertEquals(POST_NOT_FOUND, exception.getErrorCode());
+  }
+
+  @Test
+  void getAllPosts_Success() {
+    //given
+    List<Post> savedPosts = postRepository.findAll();
+    int expectedSize = savedPosts.size();
+
+    //when
+    List<PostListDto> postListDtos = postService.getAllPosts();
+
+    //then
+    assertEquals(expectedSize, postListDtos.size());
   }
 
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class PostUpdateDto {
 
-  private Long jobPostingId;
+  private Long postId;
   private String position;
   private int reward;
   private String description;

@@ -1,5 +1,6 @@
 package com.wanted.jobportal.controller;
 
+import com.wanted.jobportal.domain.Post;
 import com.wanted.jobportal.dto.PostAddDto;
 import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -41,6 +43,13 @@ public class PostController {
   @GetMapping
   public ResponseEntity<List<PostListDto>> getAllPosts() {
     return ResponseEntity.ok().body(postService.getAllPosts());
+  }
+
+  @GetMapping("/saerch/{keyword}")
+  public ResponseEntity<List<PostListDto>> searchPosts(
+      @PathVariable String keyword
+  ) {
+    return ResponseEntity.ok().body(postService.searchPosts(keyword));
   }
 
 }

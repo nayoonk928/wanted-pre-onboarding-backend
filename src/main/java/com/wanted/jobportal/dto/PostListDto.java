@@ -16,7 +16,7 @@ public class PostListDto {
   private int reward;
   private String skill;
 
-  public static PostListDto search(Post post) {
+  public static PostListDto of(Post post) {
     PostListDto.PostListDtoBuilder builder = PostListDto.builder()
         .postId(post.getId())
         .companyName(post.getCompany().getName())

@@ -11,5 +11,6 @@ public interface PostService {
   String updateJobPosting(PostUpdateDto postUpdateDto);
   String deleteJobPosting(Long id);
   List<PostListDto> getAllPosts();
+  List<PostListDto> searchPosts(String companyName);
 
 }

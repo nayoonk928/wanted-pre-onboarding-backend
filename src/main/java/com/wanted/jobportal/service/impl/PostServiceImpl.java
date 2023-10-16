@@ -1,8 +1,8 @@
 package com.wanted.jobportal.service.impl;
 
 import static com.wanted.jobportal.exception.ErrorCode.COMPANY_NOT_FOUND;
-import static com.wanted.jobportal.exception.ErrorCode.INVALID_JOB_POSTING_ID;
-import static com.wanted.jobportal.exception.ErrorCode.JOB_POSTING_NOT_FOUND;
+import static com.wanted.jobportal.exception.ErrorCode.INVALID_POST_ID;
+import static com.wanted.jobportal.exception.ErrorCode.POST_NOT_FOUND;
 
 import com.wanted.jobportal.domain.Company;
 import com.wanted.jobportal.domain.Post;
@@ -46,11 +46,11 @@ public class PostServiceImpl implements PostService {
   @Override
   @Transactional
   public String updateJobPosting(PostUpdateDto postUpdateDto) {
-    Post post = postRepository.findById(postUpdateDto.getJobPostingId())
-        .orElseThrow(() -> new CustomException(JOB_POSTING_NOT_FOUND));
+    Post post = postRepository.findById(postUpdateDto.getPostId())
+        .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
 
-    if (post.getId() != postUpdateDto.getJobPostingId()){
-      throw new CustomException(INVALID_JOB_POSTING_ID);
+    if (post.getId() != postUpdateDto.getPostId()){
+      throw new CustomException(INVALID_POST_ID);
     }
 
     if (postUpdateDto.getPosition() != null) {
@@ -80,14 +80,20 @@ public class PostServiceImpl implements PostService {
       postRepository.deleteById(id);
       return "채용공고가 삭제되었습니다.";
     } else {
-      throw new CustomException(JOB_POSTING_NOT_FOUND);
+      throw new CustomException(POST_NOT_FOUND);
     }
   }
 
   @Override
   public List<PostListDto> getAllPosts() {
     List<Post> posts = postRepository.findAll();
-    List<PostListDto> postListDtos = posts.stream().map(PostListDto::search).toList();
+    List<PostListDto> postListDtos = posts.stream().map(PostListDto::of).toList();
+    return postListDtos;
+  }
+
+  public List<PostListDto> searchPosts(String keyword) {
+    List<Post> posts = postRepository.searchPosts(keyword);
+    List<PostListDto> postListDtos = posts.stream().map(PostListDto::of).toList();
     return postListDtos;
   }
 
