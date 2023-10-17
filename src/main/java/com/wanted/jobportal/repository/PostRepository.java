@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-  @Query("SELECT p FROM post p " +
+  @Query("SELECT p FROM Post p " +
       "WHERE p.company.name LIKE %:keyword% " +
       "OR p.position LIKE %:keyword% " +
       "OR p.skill LIKE %:keyword% " +
