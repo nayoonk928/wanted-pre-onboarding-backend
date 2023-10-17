@@ -8,7 +8,6 @@ import com.wanted.jobportal.domain.Company;
 import com.wanted.jobportal.domain.Post;
 import com.wanted.jobportal.dto.PostAddDto;
 import com.wanted.jobportal.dto.PostDetailDto;
-import com.wanted.jobportal.dto.PostDto;
 import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
 import com.wanted.jobportal.dto.ResponseDto;
@@ -17,6 +16,7 @@ import com.wanted.jobportal.repository.CompanyRepository;
 import com.wanted.jobportal.repository.PostRepository;
 import com.wanted.jobportal.service.PostService;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +52,7 @@ public class PostServiceImpl implements PostService {
     Post post = postRepository.findById(postUpdateDto.getPostId())
         .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
 
-    if (post.getId() != postUpdateDto.getPostId()){
+    if (!Objects.equals(post.getId(), postUpdateDto.getPostId())){
       throw new CustomException(INVALID_POST_ID);
     }
 
@@ -73,7 +73,7 @@ public class PostServiceImpl implements PostService {
     }
 
     postRepository.save(post);
-    return new ResponseDto("채용공고가 수정되었습니다.", PostDto.of(post));
+    return new ResponseDto("채용공고가 수정되었습니다.", PostUpdateDto.of(post));
   }
 
   @Override
@@ -90,14 +90,12 @@ public class PostServiceImpl implements PostService {
   @Override
   public List<PostListDto> getAllPosts() {
     List<Post> posts = postRepository.findAll();
-    List<PostListDto> postListDtos = posts.stream().map(PostListDto::of).toList();
-    return postListDtos;
+    return posts.stream().map(PostListDto::of).toList();
   }
 
   public List<PostListDto> searchPosts(String keyword) {
     List<Post> posts = postRepository.searchPosts(keyword);
-    List<PostListDto> postListDtos = posts.stream().map(PostListDto::of).toList();
-    return postListDtos;
+    return posts.stream().map(PostListDto::of).toList();
   }
 
   @Override

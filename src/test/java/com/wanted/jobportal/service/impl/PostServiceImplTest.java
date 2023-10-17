@@ -49,7 +49,7 @@ class PostServiceImplTest {
 
   @Test
   @DisplayName("채용공고 등록 - 성공")
-  void createJobPosting_Success() {
+  void createPost_Success() {
     //given
     Company company = Company.builder()
         .name("원티드랩")
@@ -77,7 +77,7 @@ class PostServiceImplTest {
 
   @Test
   @DisplayName("채용공고 등록 - 실패")
-  void createJobPosting_CompanyNotFound() {
+  void createPost_CompanyNotFound() {
     //given
     PostAddDto postAddDto = PostAddDto.builder()
         .companyId(2L)
@@ -98,7 +98,7 @@ class PostServiceImplTest {
 
   @Test
   @DisplayName("채용공고 수정 - 성공")
-  void updateJobPosting_Success() {
+  void updatePost_Success() {
     //given
     PostUpdateDto updateDto = PostUpdateDto.builder()
         .postId(1L)
@@ -132,7 +132,7 @@ class PostServiceImplTest {
 
   @Test
   @DisplayName("채용공고 수정 - 실패")
-  void updateJobPosting_PostingNotFound() {
+  void updatePost_PostNotFound() {
     //given
     PostUpdateDto updateDto = PostUpdateDto.builder()
         .postId(1L)
@@ -153,7 +153,7 @@ class PostServiceImplTest {
 
   @Test
   @DisplayName("채용공고 수정 - 실패")
-  void updateJobPosting_FailWithModifiedJobPostingId() {
+  void updatePost_FailWithModifiedPostId() {
     //given
     PostUpdateDto updateDto = PostUpdateDto.builder()
         .postId(1L)
@@ -182,7 +182,7 @@ class PostServiceImplTest {
 
   @Test
   @DisplayName("채용공고 삭제 - 성공")
-  void deleteJobPosting_Success() {
+  void deletePost_Success() {
     //given
     Long jobPostingId = 1L;
 
@@ -198,7 +198,7 @@ class PostServiceImplTest {
 
   @Test
   @DisplayName("채용공고 삭제 - 실패")
-  void deleteJobPosting_PostingNotFound() {
+  void deletePost_PostNotFound() {
     //given
     Long jobPostingId = 1L;
 
