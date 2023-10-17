@@ -4,12 +4,13 @@ import com.wanted.jobportal.dto.PostAddDto;
 import com.wanted.jobportal.dto.PostDetailDto;
 import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
+import com.wanted.jobportal.dto.ResponseDto;
 import java.util.List;
 
 public interface PostService {
 
-  String createPost(PostAddDto postAddDto);
-  String updatePost(PostUpdateDto postUpdateDto);
+  ResponseDto createPost(PostAddDto postAddDto);
+  ResponseDto updatePost(PostUpdateDto postUpdateDto);
   String deletePost(Long postId);
   List<PostListDto> getAllPosts();
   List<PostListDto> searchPosts(String companyName);

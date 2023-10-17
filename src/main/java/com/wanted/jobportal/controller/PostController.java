@@ -4,6 +4,7 @@ import com.wanted.jobportal.dto.PostAddDto;
 import com.wanted.jobportal.dto.PostDetailDto;
 import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
+import com.wanted.jobportal.dto.ResponseDto;
 import com.wanted.jobportal.service.PostService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +26,12 @@ public class PostController {
   private final PostService postService;
 
   @PostMapping
-  public ResponseEntity<String> createPost(@RequestBody PostAddDto dto) {
+  public ResponseEntity<ResponseDto> createPost(@RequestBody PostAddDto dto) {
     return ResponseEntity.ok().body(postService.createPost(dto));
   }
 
   @PatchMapping
-  public ResponseEntity<String> updatePost(@RequestBody PostUpdateDto dto) {
+  public ResponseEntity<ResponseDto> updatePost(@RequestBody PostUpdateDto dto) {
     return ResponseEntity.ok().body(postService.updatePost(dto));
   }
 

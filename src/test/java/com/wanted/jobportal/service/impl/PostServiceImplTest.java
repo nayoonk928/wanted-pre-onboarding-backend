@@ -16,6 +16,7 @@ import com.wanted.jobportal.domain.Post;
 import com.wanted.jobportal.dto.PostAddDto;
 import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
+import com.wanted.jobportal.dto.ResponseDto;
 import com.wanted.jobportal.exception.CustomException;
 import com.wanted.jobportal.repository.CompanyRepository;
 import com.wanted.jobportal.repository.PostRepository;
@@ -66,12 +67,12 @@ class PostServiceImplTest {
 
     //when
     when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
-    String response = postService.createPost(postAddDto);
+    ResponseDto response = postService.createPost(postAddDto);
 
     //then
     verify(companyRepository, times(1)).findById(1L);
     verify(postRepository, times(1)).save(any());
-    assertEquals(response, "채용공고가 등록되었습니다.");
+    assertEquals(response.getMessage(), "채용공고가 등록되었습니다.");
   }
 
   @Test
@@ -117,12 +118,12 @@ class PostServiceImplTest {
 
     //when
     when(postRepository.findById(1L)).thenReturn(java.util.Optional.of(existingPost));
-    String response = postService.updatePost(updateDto);
+    ResponseDto response = postService.updatePost(updateDto);
 
     //then
     verify(postRepository, times(1)).findById(1L);
     verify(postRepository, times(1)).save(any());
-    assertEquals("채용공고가 수정되었습니다.", response);
+    assertEquals("채용공고가 수정되었습니다.", response.getMessage());
     assertEquals("업데이트된 포지션", existingPost.getPosition());
     assertEquals(2000000, existingPost.getReward());
     assertEquals("업데이트된 설명", existingPost.getDescription());

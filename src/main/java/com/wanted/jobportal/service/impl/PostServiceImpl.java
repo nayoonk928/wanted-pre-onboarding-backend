@@ -8,8 +8,10 @@ import com.wanted.jobportal.domain.Company;
 import com.wanted.jobportal.domain.Post;
 import com.wanted.jobportal.dto.PostAddDto;
 import com.wanted.jobportal.dto.PostDetailDto;
+import com.wanted.jobportal.dto.PostDto;
 import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
+import com.wanted.jobportal.dto.ResponseDto;
 import com.wanted.jobportal.exception.CustomException;
 import com.wanted.jobportal.repository.CompanyRepository;
 import com.wanted.jobportal.repository.PostRepository;
@@ -28,7 +30,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public String createPost(PostAddDto postAddDto) {
+  public ResponseDto createPost(PostAddDto postAddDto) {
     Company company = companyRepository.findById(postAddDto.getCompanyId())
         .orElseThrow(() -> new CustomException(COMPANY_NOT_FOUND));
 
@@ -41,12 +43,12 @@ public class PostServiceImpl implements PostService {
         .build();
 
     postRepository.save(post);
-    return "채용공고가 등록되었습니다.";
+    return new ResponseDto("채용공고가 등록되었습니다.", postAddDto);
   }
 
   @Override
   @Transactional
-  public String updatePost(PostUpdateDto postUpdateDto) {
+  public ResponseDto updatePost(PostUpdateDto postUpdateDto) {
     Post post = postRepository.findById(postUpdateDto.getPostId())
         .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
 
@@ -71,7 +73,7 @@ public class PostServiceImpl implements PostService {
     }
 
     postRepository.save(post);
-    return "채용공고가 수정되었습니다.";
+    return new ResponseDto("채용공고가 수정되었습니다.", PostDto.of(post));
   }
 
   @Override
