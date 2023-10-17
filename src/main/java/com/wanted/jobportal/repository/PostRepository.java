@@ -1,7 +1,6 @@
 package com.wanted.jobportal.repository;
 
 import com.wanted.jobportal.domain.Post;
-import com.wanted.jobportal.dto.PostListDto;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     ErrorResponse response = ErrorResponse.builder()
         .message(e.getMessage())
         .build();
-    log.error("{} is occurred.", e.getMessage());
+    log.warn("{} is occurred.", e.getMessage());
     return new ResponseEntity<>(response, e.getHttpStatus());
   }
 
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
 
     errors.getAllErrors().forEach((error) -> {
       errorResponseList.add(ErrorResponse.of((FieldError) error));
-      log.error("Field error occurred: {}", error.getDefaultMessage());
+      log.warn("Field error occurred: {}", error.getDefaultMessage());
     });
 
     return new ResponseEntity<>(errorResponseList, HttpStatus.BAD_REQUEST);
