@@ -1,14 +1,13 @@
 package com.wanted.jobportal.dto;
 
-import com.wanted.jobportal.domain.JobPosting;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class JobPostingUpdateDto {
+public class PostAddDto {
 
-  private Long jobPostingId;
+  private Long companyId;
   private String position;
   private int reward;
   private String description;

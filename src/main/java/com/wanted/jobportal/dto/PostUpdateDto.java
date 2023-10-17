@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class JobPostingDto {
+public class PostUpdateDto {
 
-  private Long companyId;
+  private Long postId;
   private String position;
   private int reward;
   private String description;
