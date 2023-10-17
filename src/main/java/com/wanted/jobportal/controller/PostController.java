@@ -44,7 +44,7 @@ public class PostController {
     return ResponseEntity.ok().body(postService.getAllPosts());
   }
 
-  @GetMapping("/saerch/{keyword}")
+  @GetMapping("/search/{keyword}")
   public ResponseEntity<List<PostListDto>> searchPosts(@PathVariable String keyword) {
     return ResponseEntity.ok().body(postService.searchPosts(keyword));
   }
