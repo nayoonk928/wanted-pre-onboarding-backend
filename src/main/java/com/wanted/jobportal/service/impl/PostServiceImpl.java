@@ -7,6 +7,7 @@ import static com.wanted.jobportal.exception.ErrorCode.POST_NOT_FOUND;
 import com.wanted.jobportal.domain.Company;
 import com.wanted.jobportal.domain.Post;
 import com.wanted.jobportal.dto.PostAddDto;
+import com.wanted.jobportal.dto.PostDetailDto;
 import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
 import com.wanted.jobportal.exception.CustomException;
@@ -27,7 +28,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public String createJobPosting(PostAddDto postAddDto) {
+  public String createPost(PostAddDto postAddDto) {
     Company company = companyRepository.findById(postAddDto.getCompanyId())
         .orElseThrow(() -> new CustomException(COMPANY_NOT_FOUND));
 
@@ -45,7 +46,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public String updateJobPosting(PostUpdateDto postUpdateDto) {
+  public String updatePost(PostUpdateDto postUpdateDto) {
     Post post = postRepository.findById(postUpdateDto.getPostId())
         .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
 
@@ -75,9 +76,9 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional
-  public String deleteJobPosting(Long id) {
-    if (postRepository.existsById(id)) {
-      postRepository.deleteById(id);
+  public String deletePost(Long postId) {
+    if (postRepository.existsById(postId)) {
+      postRepository.deleteById(postId);
       return "채용공고가 삭제되었습니다.";
     } else {
       throw new CustomException(POST_NOT_FOUND);
@@ -95,6 +96,14 @@ public class PostServiceImpl implements PostService {
     List<Post> posts = postRepository.searchPosts(keyword);
     List<PostListDto> postListDtos = posts.stream().map(PostListDto::of).toList();
     return postListDtos;
+  }
+
+  @Override
+  public PostDetailDto getPostDetail(Long postId) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
+
+    return PostDetailDto.from(post, post.getCompany().getPosts());
   }
 
 }

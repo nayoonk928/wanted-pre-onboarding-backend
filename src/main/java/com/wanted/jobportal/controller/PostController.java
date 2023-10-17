@@ -1,7 +1,7 @@
 package com.wanted.jobportal.controller;
 
-import com.wanted.jobportal.domain.Post;
 import com.wanted.jobportal.dto.PostAddDto;
+import com.wanted.jobportal.dto.PostDetailDto;
 import com.wanted.jobportal.dto.PostListDto;
 import com.wanted.jobportal.dto.PostUpdateDto;
 import com.wanted.jobportal.service.PostService;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,18 +25,18 @@ public class PostController {
   private final PostService postService;
 
   @PostMapping
-  public ResponseEntity<String> createJobPosting(@RequestBody PostAddDto dto) {
-    return ResponseEntity.ok().body(postService.createJobPosting(dto));
+  public ResponseEntity<String> createPost(@RequestBody PostAddDto dto) {
+    return ResponseEntity.ok().body(postService.createPost(dto));
   }
 
   @PatchMapping
-  public ResponseEntity<String> modifyJobPosting(@RequestBody PostUpdateDto dto) {
-    return ResponseEntity.ok().body(postService.updateJobPosting(dto));
+  public ResponseEntity<String> updatePost(@RequestBody PostUpdateDto dto) {
+    return ResponseEntity.ok().body(postService.updatePost(dto));
   }
 
   @DeleteMapping
-  public ResponseEntity<String> deleteJobPosting(@PathVariable Long id) {
-    return ResponseEntity.ok().body(postService.deleteJobPosting(id));
+  public ResponseEntity<String> deletePost(@PathVariable Long postId) {
+    return ResponseEntity.ok().body(postService.deletePost(postId));
   }
 
   @GetMapping
@@ -46,10 +45,13 @@ public class PostController {
   }
 
   @GetMapping("/saerch/{keyword}")
-  public ResponseEntity<List<PostListDto>> searchPosts(
-      @PathVariable String keyword
-  ) {
+  public ResponseEntity<List<PostListDto>> searchPosts(@PathVariable String keyword) {
     return ResponseEntity.ok().body(postService.searchPosts(keyword));
+  }
+
+  @GetMapping("/{postId}")
+  public ResponseEntity<PostDetailDto> getPostDetail(@PathVariable Long postId) {
+    return ResponseEntity.ok().body(postService.getPostDetail(postId));
   }
 
 }

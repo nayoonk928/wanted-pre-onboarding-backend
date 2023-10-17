@@ -1,9 +1,7 @@
 package com.wanted.jobportal.service.impl;
 
 import static com.wanted.jobportal.exception.ErrorCode.COMPANY_NOT_FOUND;
-import static com.wanted.jobportal.exception.ErrorCode.INVALID_JOB_POSTING_ID;
 import static com.wanted.jobportal.exception.ErrorCode.INVALID_POST_ID;
-import static com.wanted.jobportal.exception.ErrorCode.JOB_POSTING_NOT_FOUND;
 import static com.wanted.jobportal.exception.ErrorCode.POST_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,20 +19,23 @@ import com.wanted.jobportal.dto.PostUpdateDto;
 import com.wanted.jobportal.exception.CustomException;
 import com.wanted.jobportal.repository.CompanyRepository;
 import com.wanted.jobportal.repository.PostRepository;
-import com.wanted.jobportal.service.PostService;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.ResponseEntity;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 class PostServiceImplTest {
 
-  private PostService postService;
+  @InjectMocks
+  private PostServiceImpl postService;
 
+  @Mock
   private CompanyRepository companyRepository;
 
+  @Mock
   private PostRepository postRepository;
 
 
@@ -65,7 +66,7 @@ class PostServiceImplTest {
 
     //when
     when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
-    String response = postService.createJobPosting(postAddDto);
+    String response = postService.createPost(postAddDto);
 
     //then
     verify(companyRepository, times(1)).findById(1L);
@@ -90,7 +91,7 @@ class PostServiceImplTest {
 
     //then
     CustomException exception = assertThrows(CustomException.class,
-        () -> postService.createJobPosting(postAddDto));
+        () -> postService.createPost(postAddDto));
     assertEquals(COMPANY_NOT_FOUND, exception.getErrorCode());
   }
 
@@ -116,7 +117,7 @@ class PostServiceImplTest {
 
     //when
     when(postRepository.findById(1L)).thenReturn(java.util.Optional.of(existingPost));
-    String response = postService.updateJobPosting(updateDto);
+    String response = postService.updatePost(updateDto);
 
     //then
     verify(postRepository, times(1)).findById(1L);
@@ -145,7 +146,7 @@ class PostServiceImplTest {
 
     //then
     CustomException exception = assertThrows(CustomException.class,
-        () -> postService.updateJobPosting(updateDto));
+        () -> postService.updatePost(updateDto));
     assertEquals(POST_NOT_FOUND, exception.getErrorCode());
   }
 
@@ -174,7 +175,7 @@ class PostServiceImplTest {
 
     //then
     CustomException exception = assertThrows(CustomException.class,
-        () -> postService.updateJobPosting(updateDto));
+        () -> postService.updatePost(updateDto));
     assertEquals(INVALID_POST_ID, exception.getErrorCode());
   }
 
@@ -186,7 +187,7 @@ class PostServiceImplTest {
 
     //when
     when(postRepository.existsById(jobPostingId)).thenReturn(true);
-    String response = postService.deleteJobPosting(jobPostingId);
+    String response = postService.deletePost(jobPostingId);
 
     //then
     verify(postRepository, times(1)).existsById(jobPostingId);
@@ -205,11 +206,12 @@ class PostServiceImplTest {
 
     //then
     CustomException exception = assertThrows(CustomException.class,
-        () -> postService.deleteJobPosting(jobPostingId));
+        () -> postService.deletePost(jobPostingId));
     assertEquals(POST_NOT_FOUND, exception.getErrorCode());
   }
 
   @Test
+  @DisplayName("모든 채용공고 보기 - 성공")
   void getAllPosts_Success() {
     //given
     List<Post> savedPosts = postRepository.findAll();
